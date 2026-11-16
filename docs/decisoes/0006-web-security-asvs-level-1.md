@@ -28,7 +28,7 @@
     | HTTPS (V12) | TLS at the proxy, HSTS |
     | Configuration (V13) | Secrets in environment variables (RNF-32); no stack trace or debug mode in production |
     | Data (V14) | No personal data or tokens in URLs; `Cache-Control: no-store` on API responses |
-    | Logs and errors (V16) | Generic error messages; logs without password, token or sensitive content (RNF-39, topic 9) |
+    | Logs and errors (V16) | Generic error messages; logs without password, token or sensitive content (RNF-39). V16 has no level 1 items; the level 2 items adopted are in [0010](0010-logs-monitoring-and-incident-response.md) |
 
     helmet 8 and Zod 4 come from 0002 (checked on 14/11/2026).
 - **Scaling path:** the rate limit keeps its counters in memory by default. With one container (v1) that is enough. With two or more API copies, each copy would count on its own, so the real limit would multiply by the number of copies, which goes against RNF-33. Then the counters move to the database (`rateLimit.storage: "database"`) or to Redis (`"secondary-storage"`), only by configuration, inside `reusable/auth`.

@@ -12,7 +12,7 @@ Começou em 13/11/2026, antes do Spec Kit. É um tópico por vez: explicação, 
 | 6 | CI/CD: testes, análise de segurança (SAST, dependências e busca de segredos commitados) e branch protegida; mapa de ameaças de uma página (STRIDE); 2FA só para o administrador na v1; varredura com OWASP ZAP (DAST) contra o container | decidido | [0009](decisoes/0009-ci-cd-and-security-checks.md) |
 | 7 | AWS com custo baixo (se faltar tempo, a demonstração local basta) | pendente | — |
 | 8 | Performance e escala: fila da geração por IA no próprio PostgreSQL (pg-boss, `SKIP LOCKED`), repetições em camadas, clique duplo, concorrência do worker e Redis só quando houver motivo medido | decidido | [0008](decisoes/0008-ai-job-queue-postgresql.md) |
-| 9 | Logs e monitoramento; plano de incidente (trocar segredos, encerrar sessões, avisar a ANPD e os titulares, LGPD art. 48, prazo a conferir) | pendente | — |
+| 9 | Logs e monitoramento; plano de incidente (trocar segredos, encerrar sessões, avisar a ANPD e os titulares, LGPD art. 48, prazo a conferir) | decidido | [0010](decisoes/0010-logs-monitoring-and-incident-response.md); plano em [INCIDENTES](INCIDENTES.md) (3 dias úteis, Resolução CD/ANPD 15/2024) |
 
 ## Ordem de execução (15/11)
 A numeração acima continua sendo o total da trilha. A ordem de trabalho, enxuta para a primeira versão, é **5 → 8 → 6 → 9 → 7**:

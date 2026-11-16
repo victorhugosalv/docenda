@@ -25,8 +25,9 @@ Montar um plano de aula alinhado à BNCC e adaptado à turma real leva tempo. Mo
 | Ambiente | Docker Compose, container sem root e ambiente isolado para o agente de código ([0007](docs/decisoes/0007-docker-and-isolated-environment.md)) |
 | Fila | Geração por IA em fila no próprio PostgreSQL (pg-boss), separada das telas ([0008](docs/decisoes/0008-ai-job-queue-postgresql.md)) |
 | CI/CD | Tipos, testes, CodeQL, Dependabot e busca de segredos em cada pull request; imagem publicada pelo hash do commit; mapa de ameaças (STRIDE), 2FA do administrador e OWASP ZAP antes de publicar ([0009](docs/decisoes/0009-ci-cd-and-security-checks.md)) |
+| Logs e incidentes | Log em JSON sem dados pessoais, registro de acesso e auditoria separados, alertas ao administrador e plano de resposta a incidentes ([0010](docs/decisoes/0010-logs-monitoring-and-incident-response.md)) |
 
-Próximos tópicos: logs e monitoramento, e AWS com custo baixo ([trilha](docs/TRILHA-ARQUITETURA.md)).
+Próximo tópico: AWS com custo baixo ([trilha](docs/TRILHA-ARQUITETURA.md)).
 
 ## Como o projeto é feito
 Um tópico de arquitetura por vez: conceito, boa prática com fonte oficial conferida na data, duas ou três opções com custo e uma decisão registrada em ADR. O desenvolvimento usa o Claude Code como apoio, com revisão humana de cada decisão.
@@ -35,6 +36,7 @@ Um tópico de arquitetura por vez: conceito, boa prática com fonte oficial conf
 - [Propósito](docs/PROPOSITO.md): problema, público, garantias e o que o produto não faz.
 - [Requisitos](docs/REQUISITOS.md): requisitos funcionais e não funcionais, LGPD e pontos em aberto.
 - [Trilha de arquitetura](docs/TRILHA-ARQUITETURA.md) e [decisões (ADRs)](docs/decisoes/).
+- [Plano de resposta a incidentes](docs/INCIDENTES.md).
 
 ## Autor
 Victor Hugo Salviano, licenciando em Ciência da Computação (UFPB). [LinkedIn](https://www.linkedin.com/in/victor-hugo-salviano).
