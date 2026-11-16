@@ -16,7 +16,7 @@
 | Licenciando | Estudante de licenciatura em estágio; cria planos | v1 |
 | Professor | Professor da educação básica; cria e avalia os próprios planos | v1 |
 | Revisor | Convidado pelo licenciando: professor orientador da faculdade ou supervisor da escola | depois |
-| Administrador | Mantém o sistema: limites, teto de gasto, liga e desliga a IA, revisa bloqueios por uso indevido | v1 |
+| Administrador | Mantém o sistema: convites (na v1, o cadastro é só por convite), limites, teto de gasto, liga e desliga a IA, revisa bloqueios por uso indevido | v1 |
 
 "Autor" = licenciando ou professor, dono do plano.
 
@@ -38,8 +38,8 @@
 ### 3.1 Conta e acesso
 | ID | Requisito | Critério de aceite | Dados pessoais? | Prioridade | Fase | Verificação |
 |---|---|---|---|---|---|---|
-| RF-01 | O sistema deve permitir cadastro com nome, e-mail e senha, com aceite dos termos | Senha com 8 a 128 caracteres, sem regras de composição e fora da lista de senhas proibidas (decisão 0003); aceite guardado com data e versão dos termos | Sim | Deve | v1 | U, E2E |
-| RF-02 | O sistema deve confirmar o e-mail por link que expira em 24 h | Conta só usa a IA depois de confirmada; link vencido não confirma e pode ser reenviado | Sim | Deve | v1 | I, E2E |
+| RF-01 | O sistema deve permitir cadastro com nome, e-mail e senha, com aceite dos termos. Na v1, só por convite (RF-78) | Sem convite válido, o cadastro é recusado; abrir o cadastro para todos é uma configuração, sem mudar código. Senha com 8 a 128 caracteres, sem regras de composição e fora da lista de senhas proibidas (decisão 0003); aceite guardado com data e versão dos termos | Sim | Deve | v1 | U, E2E |
+| RF-02 | O sistema deve confirmar o e-mail por link que expira em 24 h | Conta só usa a IA depois de confirmada; link vencido não confirma e pode ser reenviado. Conta criada por convite já nasce confirmada, porque o link chegou àquele e-mail | Sim | Deve | v1 | I, E2E |
 | RF-03 | O sistema deve permitir entrar com e-mail e senha | Mesma mensagem para qualquer falha ("E-mail ou senha incorretos"), sem dizer se o e-mail existe; no máximo 3 tentativas a cada 10 s por IP (decisão 0006); limite por conta depois da v1 | Sim | Deve | v1 | U, I, E2E |
 | RF-04 | O sistema deve manter a sessão (ver RNF-07) e encerrá-la após 30 min sem uso; o usuário pode sair | Depois de 30 min parado, a próxima ação pede login; ao sair, a sessão é apagada no servidor | Sim | Deve | v1 | I |
 | RF-05 | O usuário deve poder recuperar a senha por e-mail automático, com link de uso único que expira em 1 h | Link usado ou vencido não funciona; a mensagem não revela se o e-mail existe; trocar a senha encerra as outras sessões | Sim | Deve | v1 | I, E2E |
@@ -103,13 +103,14 @@
 | ID | Requisito | Critério de aceite | Dados pessoais? | Prioridade | Fase | Verificação |
 |---|---|---|---|---|---|---|
 | RF-70 | Só usuário autenticado e com e-mail confirmado deve conseguir chamar a IA | Chamada sem sessão válida é recusada | Não | Deve | v1 | I |
-| RF-71 | Cada usuário deve ter um limite de uso de IA por dia e por minuto | Ao passar do limite, a IA recusa com mensagem clara e o resto funciona | Sim (uso por pessoa) | Deve | v1 | U, I |
-| RF-72 | O sistema deve ter um teto de gasto mensal com IA | Ao atingir o teto, a IA desliga para todos e o resto funciona; o administrador é avisado ao chegar a 80% | Não | Deve | v1 | U, I |
+| RF-71 | Cada usuário deve ter um crédito mensal de IA e um limite de uso por dia e por minuto | Na v1, US$ 1 por mês (configurável), renovado no dia 1 no horário de Brasília, sem acumular; o usuário vê o saldo do mês; o custo é reservado no pedido (decisão 0008). Sem saldo ou acima do limite, a IA recusa com mensagem clara e o resto funciona | Sim (uso por pessoa) | Deve | v1 | U, I |
+| RF-72 | O sistema deve ter um teto de gasto mensal com IA | Ao atingir o teto, a IA desliga para todos e o resto funciona; o administrador é avisado ao chegar a 80%. Na v1, US$ 10 (10 pessoas × US$ 1) | Não | Deve | v1 | U, I |
 | RF-73 | Cada chamada deve ter tamanho máximo de entrada e de saída | Entrada grande demais é recusada antes de chegar ao provedor | Não | Deve | v1 | U |
 | RF-74 | O sistema deve registrar o uso da IA por usuário e por operação (tokens e custo estimado), sem o conteúdo | Registro existe para cada chamada; base do estudo de custo | Sim | Deve | v1 | I |
 | RF-75 | O administrador deve poder ligar e desligar a IA sem novo deploy | Mudança vale na próxima chamada | Não | Deve | v1 | I |
 | RF-76 | O usuário deveria poder usar a própria chave de API | Chave guardada criptografada, nunca em log, com opção de apagar; só provedores testados | Sim (segredo) | Deveria | depois | I, Eval |
 | RF-77 | O sistema deveria permitir modelos gratuitos | Só provedores cujos termos não usem os dados para treino | Não | Deveria | depois | Rev |
+| RF-78 | O administrador deve poder convidar pessoas pelo e-mail; na v1, o cadastro só existe por convite | Link de uso único que vence em 7 dias; a conta só é criada com o e-mail convidado; o administrador pode cancelar o convite; no máximo 10 contas ativas (configurável); o token do link é guardado só em hash; só recebe convite quem pediu | Sim (e-mail do convidado) | Deve | v1 | I, E2E |
 
 ### 3.8 Revisores, avaliação e consentimento
 | ID | Requisito | Critério de aceite | Dados pessoais? | Prioridade | Fase | Verificação |
@@ -255,6 +256,7 @@ Como usuário, quero excluir minha conta e meus dados, para exercer meu direito 
 ## 7. Privacidade (checklist LGPD, Privacy by Design)
 **Inventário de dados (v1):**
 - **Conta:** nome, e-mail, hash da senha, aceite dos termos (data e versão).
+- **Convite:** e-mail do convidado e data, só até o aceite, o cancelamento ou o vencimento (RF-78).
 - **Uso:** registros de acesso (data, hora, IP) e de uso da IA (sem conteúdo).
 - **Uso indevido:** ocorrências com o trecho mínimo que motivou, para revisão.
 - **Plano e contexto:** dados da turma de forma agregada. Identificação do plano (escola, autor, turma) é opcional e preenchida pelo autor.
@@ -284,7 +286,7 @@ Base: LGPD, arts. 15, 16 e 18, VI (eliminação, salvo as exceções do art. 16)
 ### 7.2 Itens do checklist
 | Item | Aplica-se? | Como atende | Evidência |
 |---|---|---|---|
-| REQ-01 Dados comuns e finalidade | Sim | Nome e e-mail para a conta; identificação do plano opcional, para o documento exportado | Inventário; RF-01, RF-60 |
+| REQ-01 Dados comuns e finalidade | Sim | Nome e e-mail para a conta; e-mail do convidado só para enviar o convite; identificação do plano opcional, para o documento exportado | Inventário; RF-01, RF-60, RF-78 |
 | REQ-02 Dados sensíveis | Sim, como risco | Não coletamos. O risco é o autor escrever diagnóstico no texto livre: alerta antes de salvar ou enviar | RF-15; seção 4 |
 | REQ-03 Finalidade de cada uso | Sim | Conta: acesso. Contexto: adaptar o plano. Uso da IA: limite, teto e custo. Ocorrências: segurança | RF-11, RF-74, RF-90 |
 | REQ-04 Necessidade e opcionais | Sim | Só etapa e duração são obrigatórias no contexto; identificação do plano é opcional | RF-11, RF-12 |
@@ -297,9 +299,9 @@ Base: LGPD, arts. 15, 16 e 18, VI (eliminação, salvo as exceções do art. 16)
 | REQ-12 Acesso, correção, exclusão | Sim | Ver e corrigir dados; excluir a conta (seção 7.1) | RF-06, RF-07 |
 | REQ-13 Decisões automáticas | Sim | Bloqueios de regra (seção 4), limite de uso e bloqueio por uso indevido. O usuário sabe o critério e pode pedir revisão (art. 20) | RF-91 a RF-94 |
 | REQ-14 Perfil deduzido | Sim, limitado | O sistema não deduz nada sobre alunos. Sobre o usuário, só conta ocorrências de uso indevido, para a regra de reincidência | RF-92 |
-| REQ-15 Autenticação e recuperação | Sim | Confirmação de e-mail, senha forte, limite de tentativas por IP (decisão 0006), sessão de 30 min revogável no servidor, recuperação por e-mail de 1 h; 2FA e login social depois | RF-01 a RF-05, RF-09, RF-10, RNF-07 |
+| REQ-15 Autenticação e recuperação | Sim | Cadastro só por convite na v1 (link de uso único, 7 dias); confirmação de e-mail, senha forte, limite de tentativas por IP (decisão 0006), sessão de 30 min revogável no servidor, recuperação por e-mail de 1 h; 2FA e login social depois | RF-01 a RF-05, RF-09, RF-10, RF-78, RNF-07 |
 | REQ-16 Quem vê e altera | Sim | Cada autor vê só os próprios planos. Revisor vê só o compartilhado (depois). Administrador vê uso, limites e ocorrências, não o conteúdo dos planos | RF-70, RF-80 a RF-82, RF-93 |
-| REQ-17 Retenção | Sim | Dados enquanto a conta existir; registros de acesso 6 meses; ocorrências de uso indevido: proposta de 90 dias; contas inativas: aviso aos 6 meses sem uso, 30 dias desativadas e depois apagadas ou anonimizadas | Seção 7.1; RF-07 |
+| REQ-17 Retenção | Sim | Dados enquanto a conta existir; registros de acesso 6 meses; ocorrências de uso indevido: proposta de 90 dias; contas inativas: aviso aos 6 meses sem uso, 30 dias desativadas e depois apagadas ou anonimizadas; convites: e-mail apagado no aceite (vira a conta), no cancelamento ou ao vencer (7 dias) | Seção 7.1; RF-07, RF-78 |
 | REQ-18 Descarte | Sim | Seção 7.1, incluindo backups | RF-07, RNF-24 |
 | REQ-19 Anonimização | Sim | Uso de IA: corte da ligação com o usuário. Conjunto de avaliação: remover autor, escola e turma e revisar o texto livre | Seção 7.1; RF-86 |
 | REQ-20 Criptografia | Sim | HTTPS no trânsito; banco e backups criptografados em repouso; chave do usuário criptografada (depois) | RNF-06, RF-76 |
@@ -310,7 +312,7 @@ Base: LGPD, arts. 15, 16 e 18, VI (eliminação, salvo as exceções do art. 16)
 
 ## 8. Pontos em aberto
 1. ~~Data da v1.~~ **Fechado (14/11):** primeira versão rodando no local; AWS depois.
-2. Valores: limite por dia e por minuto, teto mensal, prazo de reincidência (proposta: 30 dias). **Valores iniciais (15/11, decisão 0005):** teto de US$ 10 por mês; por usuário, 5 gerações por dia e 2 por minuto; custo estimado de US$ 0,15 a 0,20 por plano. **Valores finais depois do teste com os 3 planos de referência e de um teste de carga mínimo.**
+2. Valores: limite por dia e por minuto, teto mensal, prazo de reincidência (proposta: 30 dias). **Valores iniciais (15/11, decisão 0005):** teto de US$ 10 por mês; por usuário, 5 gerações por dia e 2 por minuto; custo estimado de US$ 0,15 a 0,20 por plano. **Atualização (16/11, decisões 0005 e 0008):** até 10 pessoas convidadas, cada uma com US$ 1 de crédito por mês, renovado no dia 1 e sem acumular; o teto de US$ 10 continua para o sistema todo. **Valores finais depois do teste com os 3 planos de referência e de um teste de carga mínimo.**
 3. ~~Provedor e modelo de IA.~~ **Fechado (15/11, decisão 0005):** API da Anthropic na v1, atrás da porta de IA (RNF-30); sem treino com os dados (RNF-22). Claude Sonnet 5.5 para gerar e avaliar; Claude Haiku 5.5 para checagens. Modelos, esforço e limites confirmados pelo teste com Haiku, Sonnet e Opus nos 3 planos de referência. Nível gratuito de provedor que treina com os dados só com dados fictícios. **E-mail fechado na decisão 0003:** Mailpit no local, Amazon SES em produção.
 4. ~~Registros de acesso.~~ **Fechado (14/11):** guardados por 6 meses desde a v1 (seção 7.1).
 5. ~~Prazo de arrependimento.~~ **Fechado (14/11):** conta desativada por 30 dias, cancelável; depois, seção 7.1 (RF-07).
