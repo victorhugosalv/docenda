@@ -272,6 +272,7 @@ Base: LGPD, arts. 15, 16 e 18, VI (eliminação, salvo as exceções do art. 16)
 | Registros de uso da IA (tokens, custo) | **Anonimizado**: a ligação com o usuário é cortada; fica só o número agregado | Uso exclusivo do controlador, sem acesso de terceiros, com dados anonimizados (art. 16, IV) |
 | Planos e avaliações já incluídos no conjunto de avaliação, com consentimento | **Anonimizados** antes de entrar no conjunto; o que não estiver anonimizado é apagado | Art. 12 e art. 16, IV; revisão manual do texto livre, porque tirar o nome não basta |
 | Registros de acesso (data, hora, IP) | **Guardados por 6 meses**, sob sigilo, e depois apagados | Obrigação legal (art. 16, I) para pessoa jurídica com fins econômicos (Marco Civil, art. 15). Seguida desde a v1, para o sistema estar pronto para virar produto (ponto 4 da seção 8) |
+| Auditoria (tipo do evento, IDs e hora, sem conteúdo) | **Guardada por 6 meses** e depois apagada | Exercício regular de direitos e segurança (arts. 7º, VI, e 46); decisão 0010 |
 | Registro mínimo do pedido de exclusão (data e resultado, sem nome nem e-mail) | **Guardado** | Comprovar que o pedido foi atendido |
 | Backups | Expiram no prazo de RNF-24 | O dado some quando o backup vence |
 
@@ -301,7 +302,7 @@ Base: LGPD, arts. 15, 16 e 18, VI (eliminação, salvo as exceções do art. 16)
 | REQ-14 Perfil deduzido | Sim, limitado | O sistema não deduz nada sobre alunos. Sobre o usuário, só conta ocorrências de uso indevido, para a regra de reincidência | RF-92 |
 | REQ-15 Autenticação e recuperação | Sim | Cadastro só por convite na v1 (link de uso único, 7 dias); confirmação de e-mail, senha forte, limite de tentativas por IP (decisão 0006), sessão de 30 min revogável no servidor, recuperação por e-mail de 1 h; 2FA e login social depois | RF-01 a RF-05, RF-09, RF-10, RF-78, RNF-07 |
 | REQ-16 Quem vê e altera | Sim | Cada autor vê só os próprios planos. Revisor vê só o compartilhado (depois). Administrador vê uso, limites e ocorrências, não o conteúdo dos planos | RF-70, RF-80 a RF-82, RF-93 |
-| REQ-17 Retenção | Sim | Dados enquanto a conta existir; registros de acesso 6 meses; ocorrências de uso indevido: proposta de 90 dias; contas inativas: aviso aos 6 meses sem uso, 30 dias desativadas e depois apagadas ou anonimizadas; convites: e-mail apagado no aceite (vira a conta), no cancelamento ou ao vencer (7 dias) | Seção 7.1; RF-07, RF-78 |
+| REQ-17 Retenção | Sim | Dados enquanto a conta existir; registros de acesso 6 meses; auditoria 6 meses (decisão 0010); ocorrências de uso indevido: proposta de 90 dias; contas inativas: aviso aos 6 meses sem uso, 30 dias desativadas e depois apagadas ou anonimizadas; convites: e-mail apagado no aceite (vira a conta), no cancelamento ou ao vencer (7 dias) | Seção 7.1; RF-07, RF-78 |
 | REQ-18 Descarte | Sim | Seção 7.1, incluindo backups | RF-07, RNF-24 |
 | REQ-19 Anonimização | Sim | Uso de IA: corte da ligação com o usuário. Conjunto de avaliação: remover autor, escola e turma e revisar o texto livre | Seção 7.1; RF-86 |
 | REQ-20 Criptografia | Sim | HTTPS no trânsito; banco e backups criptografados em repouso; chave do usuário criptografada (depois) | RNF-06, RF-76 |
