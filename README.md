@@ -26,8 +26,9 @@ Montar um plano de aula alinhado à BNCC e adaptado à turma real leva tempo. Mo
 | Fila | Geração por IA em fila no próprio PostgreSQL (pg-boss), separada das telas ([0008](docs/decisoes/0008-ai-job-queue-postgresql.md)) |
 | CI/CD | Tipos, testes, CodeQL, Dependabot e busca de segredos em cada pull request; imagem publicada pelo hash do commit; mapa de ameaças (STRIDE), 2FA do administrador e OWASP ZAP antes de publicar ([0009](docs/decisoes/0009-ci-cd-and-security-checks.md)) |
 | Logs e incidentes | Log em JSON sem dados pessoais, registro de acesso e auditoria separados, alertas ao administrador e plano de resposta a incidentes ([0010](docs/decisoes/0010-logs-monitoring-and-incident-response.md)) |
+| Implantação | v1 em demonstração local; depois, um servidor Lightsail em São Paulo com o mesmo Compose, HTTPS automático e backups de 7 dias, abaixo de US$ 20 por mês ([0011](docs/decisoes/0011-low-cost-aws.md)) |
 
-Próximo tópico: AWS com custo baixo ([trilha](docs/TRILHA-ARQUITETURA.md)).
+Trilha de arquitetura concluída em 16/11/2026 ([trilha](docs/TRILHA-ARQUITETURA.md)); o próximo passo é o código.
 
 ## Como o projeto é feito
 Um tópico de arquitetura por vez: conceito, boa prática com fonte oficial conferida na data, duas ou três opções com custo e uma decisão registrada em ADR. O desenvolvimento usa o Claude Code como apoio, com revisão humana de cada decisão.

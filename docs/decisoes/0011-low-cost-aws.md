@@ -1,0 +1,52 @@
+# 0011: Low-cost AWS, after a local v1
+
+- **Date and status:** 16/11/2026, approved by Victor.
+- **Context:**
+  - RNF-12 asks for a deploy on AWS at low cost, with a monthly target set here. The track already allowed a local demo for v1.
+  - What other ADRs left for this topic: SES for e-mail in production (0003 D4), a proxy in front of the API for TLS (0006), OIDC instead of fixed keys for deploys (0009 D9), a 30-day technical log retention (0010 D4), backups kept 7 days (RNF-24) and encrypted (REQ-20).
+  - The v1 load is small: up to 10 people and US$ 10 of AI per month (0008).
+  - What changed at AWS, checked on 16/11/2026:
+    - new accounts get up to US$ 200 in credits. On the "Free" plan the account closes after 6 months or when the credits run out, whichever comes first; on the paid plan the credits still apply and the account stays;
+    - App Runner closed to new customers on 30/04/2026, and AWS points to ECS Express Mode instead. Express Mode has no charge of its own, but it creates and bills an Application Load Balancer and Fargate tasks;
+    - a Lightsail Linux instance with 2 GB costs US$ 12 per month, with a public IPv4 and 3 TB of transfer (half the transfer in São Paulo). Automatic snapshots are daily, and the latest 7 are kept, at US$ 0.05 per GB per month.
+- **Decision:**
+  - **D1. v1 runs locally.** The demo is `docker compose up` (0007). AWS comes only after v1 is finished and tested.
+  - **D2. Target when publishing:** one Lightsail instance with 2 GB in São Paulo (`sa-east-1`), running the same Compose file as the demo:
+    - API, worker and PostgreSQL, with the 0007 hardening;
+    - Caddy in front, as the only service with public ports (80 and 443). It gets and renews the TLS certificate by itself (Let's Encrypt);
+    - the Lightsail firewall opens only 80, 443 and SSH, with SSH limited to the administrator's IP;
+    - monthly target: about US$ 12 for the instance plus a few dollars of snapshots, under US$ 20 in total (RNF-12).
+  - **D3. Region:** São Paulo, so the database and backups stay in Brazil. The only international transfer is still the AI provider's (0005).
+  - **D4. Backups:**
+    - Lightsail automatic snapshots: daily, the latest 7 kept (RNF-24);
+    - a daily `pg_dump` saved on the instance disk, so the snapshots also carry a logical copy of the database. A disk snapshot taken while PostgreSQL runs is like a power cut: PostgreSQL usually recovers, but with no guarantee;
+    - one restore test before publishing.
+  - **D5. AWS account:**
+    - paid plan using the credits, so the account does not close after 6 months;
+    - MFA on the root user, and the root user not used day to day;
+    - budget alerts at US$ 5 and US$ 15;
+    - no long-lived access keys. The deploy uses either GitHub OIDC or the instance pulling the `sha-<commit>` image from GHCR (0009 D9). The choice is made when publishing, with the simpler safe path.
+  - **D6. When to move to ECS + RDS:**
+    - more than one API container is needed;
+    - high availability is needed (one instance means downtime during maintenance);
+    - running the database by hand (updates, backups, restores) starts to weigh.
+
+    Moving does not change code: the image is the same, and the database URL comes from configuration (RNF-32).
+  - **D7. To check when publishing:**
+    - whether Lightsail disks and snapshots are encrypted at rest (REQ-20). If not, the `pg_dump` is encrypted before it is saved;
+    - moving SES out of its sandbox for real e-mail (0003 D4);
+    - the 30-day log retention (0010 D4), through Docker log rotation sized for 30 days or a log service;
+    - Sentry stays out (0010).
+- **Alternatives considered:**
+  - Publishing in v1: more time and cost, with no gain for the demo.
+  - ECS Express Mode with Fargate and RDS: managed, scales and restarts on its own, and is the market standard. The load balancer, the Fargate tasks and the RDS instance are billed separately, which comes to several times the Lightsail price for 10 people.
+  - EC2 with EBS: the same design as Lightsail, but network, disk, public IPv4 and firewall are separate pieces to set up and pay for. Good for learning, with no gain here.
+  - App Runner: closed to new customers.
+  - US East (N. Virginia): more services and sometimes cheaper, but the data leaves Brazil.
+  - The "Free" plan: the account closes after 6 months and the deployed demo goes with it.
+- **Consequences:**
+  - Pros: a fixed and known monthly cost; the same Compose file locally and on AWS; data and backups in Brazil; a written path to managed services.
+  - Cons: one instance is a single point of failure; database updates and restores are done by hand; the instance's operating system must be kept updated.
+  - Changes elsewhere: none. 0003, 0006, 0009 and 0010 already pointed here.
+  - Cost: none in v1. When published, under US$ 20 per month, covered at first by the AWS credits.
+- **Sources (checked on 16/11/2026):** [AWS Free Tier](https://aws.amazon.com/free/), [Lightsail pricing](https://aws.amazon.com/lightsail/pricing/), [Lightsail automatic snapshots](https://docs.aws.amazon.com/lightsail/latest/userguide/amazon-lightsail-configuring-automatic-snapshots.html), [App Runner availability change](https://docs.aws.amazon.com/ja_jp/apprunner/latest/dg/apprunner-availability-change.html), [ECS Express Mode](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/express-service-overview.html), [ECS pricing](https://aws.amazon.com/ecs/pricing/).
