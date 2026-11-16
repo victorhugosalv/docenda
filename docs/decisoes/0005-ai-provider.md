@@ -20,7 +20,7 @@
   - **D4. How calls are made:**
     - **structured output** (`output_config.format` with a JSON schema), validated again with Zod. An invalid answer is retried at most twice (RNF-35);
     - **prompt caching** on the fixed prefix (instructions, rubric, plan template, BNCC skills of the stage). Repeated reads of it cost 5% of the input price;
-    - **streaming** in generation, to show progress (RNF-04), and `max_tokens` per operation (RF-73);
+    - **streaming** in generation, to show progress (RNF-04), and `max_tokens` per operation (RF-73). *Update 16/11:* streaming stays between the worker and Anthropic; the screen shows stages, not the streamed text (0008 D3);
     - **refusal** (`stop_reason: "refusal"`) becomes a clear message. On Sonnet, the server-side fallback (`fallbacks: "default"`, beta) retries on another model. In checks (Haiku, no server-side fallback), a refusal counts as "needs review", never as "passed".
   - **D5. OWASP Top 10 for LLM 2025 applied to Docenda:**
 
@@ -46,6 +46,7 @@
     | 4 checks (Haiku) | ~2k each | ~300 each | under US$ 0.002 |
 
     With room for retries, **US$ 0.15 to 0.20 per plan**; output is most of the cost. Starting values in configuration: **monthly ceiling of US$ 10** (about 50 to 65 full generations), and per user **5 generations a day and 2 a minute**. Three layers protect the ceiling: the app ceiling (RF-72, warning at 80%), a monthly spend limit on the Anthropic workspace (Console), and prepaid credits with auto-reload off. Tokens and cost come from `response.usage` and are stored as integers (RF-74, RNF-42).
+    - **Update (16/11/2026, approved by Victor):** v1 is invite-only, for up to 10 people (RF-78). Each person gets **US$ 1 of AI credit per month**, renewed on the 1st at Brasília time; unused credit does not carry over. US$ 1 covers about 5 or 6 full generations. The monthly ceiling stays at US$ 10 (10 × US$ 1) as the system-wide layer, and the limits of 2 a minute and 5 a day stay as protection against bursts. The maximum cost of an operation is reserved from the credit when the job is queued and settled from `response.usage` (0008 D3).
   - **D7. Confirmation test:** generate with Haiku, Sonnet and Opus from the contexts of the 3 reference plans and compare with the version reviewed by the internship teacher. Measure quality against the rubric, tokens, cost and time. The reference plans go only to this provider, which does not train on them (RNF-22). The result can change the models, effort levels and limits in D3 and D6, through configuration only.
   - **D8. Guardrails, in any language:**
     - **Full path:** input → text cleanup → student data alert (RF-15) → misuse check (RF-90) → generation → output validation (schema, catalog, domains) → **Haiku checks the answer** → screen. An answer that fails the check is not shown, and the author sees a clear message.
