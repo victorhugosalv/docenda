@@ -1,0 +1,25 @@
+# 0007: Docker and an isolated environment for Claude
+
+- **Date and status:** 16/11/2026, approved by Victor.
+- **Context:** RNF-11 asks for the system to start locally with one command. 0004 runs PostgreSQL 18 as a local container, and 0003 uses Mailpit for e-mail in local runs and the demo. Claude will also write code, sometimes without Victor watching, so it needs an environment where a wrong or malicious command cannot reach the rest of the machine (SSH keys, other private repositories, private reference material). Checked on 16/11/2026: Docker Desktop 29.9.2 with Compose 5.6.1 works in Victor's WSL2, and `/dev/kvm` is present.
+- **Decision:**
+  - **D1. Compose for the application.** One `compose.yaml` with:
+    - `postgres:18.7-trixie`, version pinned. The named volume is mounted at `/var/lib/postgresql`, because from PostgreSQL 18 on the image keeps its data in `/var/lib/postgresql/18/docker` (older guides use the old path, and the data gets lost).
+    - `axllent/mailpit:v1.33.1`.
+    - A `pg_isready` healthcheck; the API starts only after the database is healthy.
+    - Ports bound to `127.0.0.1` only. Passwords in `.env` (ignored by git), with `.env.example` in the repository.
+    - Day to day: database and Mailpit in Compose, the API with `npm run dev` in WSL (hot reload). `docker compose up` brings up all three for the demo.
+  - **D2. API container without root.** Multi-stage build on `node:26-trixie-slim` (Node 26.13.1 is the current LTS). Following the OWASP Docker Security Cheat Sheet: `USER node`, `cap_drop: [ALL]`, `security_opt: [no-new-privileges:true]`, read-only filesystem with `/tmp` as tmpfs, image versions pinned, and the Docker socket is never mounted. Smaller images (alpine, distroless) are tested later, together with Prisma 7.
+  - **D3. Isolated environment for Claude:**
+    - **Main: a dev container in WSL2.** Claude Code runs inside a container as a non-root user, with only the Docenda repository mounted and an egress firewall based on Anthropic's reference container. It does not see `~/.ssh`, other repositories or private reference material. It is built when coding starts.
+    - **Long tasks: cloud sessions.** They run in an Anthropic-managed VM that clones the public GitHub repository. GitHub credentials stay outside the VM (proxy), network access is "Limited" by default, and private files never reach it.
+    - **Until then:** Victor watches and reviews each step, so no sandbox is set up for now.
+- **Alternatives considered:**
+  - Built-in Claude Code sandbox (bubblewrap + socat): ready in minutes, but by default it reads most of the machine (including `~/.ssh`), cannot run Docker, and runs unsandboxed if its startup check fails unless `failIfUnavailable` is set. The docs say not to rely on it "to stop a malicious command". It is not needed while Victor watches every step.
+  - Docker Sandboxes (`sbx`, one microVM per agent, free for local use): the docs do not make clear whether it runs inside WSL2. Revisit if the dev container falls short.
+  - Running Claude directly in WSL without isolation: fine only with Victor reviewing every command.
+- **Consequences:**
+  - Pros: one command to start everything; the same PostgreSQL locally and in production; an attack on the API is limited to an unprivileged process; Claude's unattended work cannot reach private data.
+  - Cons: about one hour to set up the dev container; inside it Claude is used from the terminal or VS Code, not from the desktop app's Code tab. A malicious project could still take the Claude credential stored in `~/.claude` inside the container, so only trusted repositories go there.
+  - Cost: none. Cloud sessions count toward the Claude plan's usage limits, with no extra charge for the VM.
+- **Sources (checked on 16/11/2026):** [postgres image on Docker Hub](https://hub.docker.com/_/postgres), [Mailpit releases](https://github.com/axllent/mailpit/releases), [Node.js releases](https://nodejs.org/dist/index.json), [OWASP Docker Security Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Docker_Security_Cheat_Sheet.html), [Claude Code dev containers](https://code.claude.com/docs/en/devcontainer), [Claude Code sandboxing](https://code.claude.com/docs/en/sandboxing), [Claude Code in the cloud](https://code.claude.com/docs/en/claude-code-on-the-web), [Docker Sandboxes](https://docs.docker.com/ai/sandboxes/).

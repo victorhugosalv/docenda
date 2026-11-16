@@ -1,0 +1,21 @@
+# 0002: Web stack
+
+- **Date and status:** 14/11/2026, approved by Victor. The database is still open.
+- **Context:** Node.js with TypeScript was already decided. Everything in Docenda is behind login, so SEO and server-side rendering bring little value. AI generation is slow and runs in a queue (RNF-34), which requires a long-running server and a worker. The API must stay independent from the UI (RNF-30). Rule from 0001: stable versions only.
+- **Decision:**
+  - **Back-end: Express 5** (5.3.0 on 14/11/2026). Express 5 forwards errors from `async` handlers to the error middleware by itself ([migration guide](https://expressjs.com/en/guide/migrating-5.html)).
+  - **Front-end: React with TypeScript, built with Vite**, as a single-page application (SPA). In v1, the API container serves the built static files, so there is one container.
+  - **ORM: Prisma 7**, pinned to `^7`. Prisma 8 is still a release candidate ([release status](https://www.prisma.io/docs/orm/release-status)); revisit only when it is stable and brings a real gain.
+  - **Runtime: Node.js 26 LTS.**
+  - **Repository:** npm workspaces with `apps/api`, `apps/web` and `packages/contracts` (shared request and response schemas).
+- **Alternatives considered:**
+  - Fastify 5: validation and logging built in, and plugin encapsulation. Victor chose Express because it is the most used in the market ([State of JS 2025](https://2025.stateofjs.com/en-US/libraries/back-end-frameworks/)) and the easiest to learn.
+  - Next.js 16: its strength (SSR and SEO) does not apply here. It mixes rules with the UI framework and has more hidden entry points. Self-hosting needs extra setup ([docs](https://nextjs.org/docs/app/guides/self-hosting)).
+  - NestJS 12: too much ceremony for one person with a short deadline.
+  - Hono 4: good fit, but it shines on the edge, which we do not use.
+  - Rsbuild, Parcel, webpack instead of Vite: no gain. Create React App is discontinued.
+- **Consequences:**
+  - Pros: the most known framework and plenty of material; the hexagonal design keeps the framework at the edge, so changing it later only touches `http/` and `entrypoints/`.
+  - Cons: Express ships almost nothing, so we pick and wire validation, logging and security headers ourselves. Candidates checked on 14/11/2026 are Zod 4, pino-http 11 and helmet 8; they get confirmed in topic 3 (security) and topic 9 (logs). Module boundaries rely only on dependency-cruiser.
+  - Cost: no money.
+- **Still open:** the database (PostgreSQL is the natural candidate for Prisma). It is decided in topic 5 (Docker) or topic 7 (AWS).
