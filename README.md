@@ -23,8 +23,9 @@ Montar um plano de aula alinhado à BNCC e adaptado à turma real leva tempo. Mo
 | IA | API da Anthropic, sem treino com os dados; guardrails do OWASP Top 10 para LLM 2025 e orçamento de tokens ([0005](docs/decisoes/0005-ai-provider.md)) |
 | Segurança web | OWASP ASVS 5.0 nível 1 ([0006](docs/decisoes/0006-web-security-asvs-level-1.md)) |
 | Ambiente | Docker Compose, container sem root e ambiente isolado para o agente de código ([0007](docs/decisoes/0007-docker-and-isolated-environment.md)) |
+| Fila | Geração por IA em fila no próprio PostgreSQL (pg-boss), separada das telas ([0008](docs/decisoes/0008-ai-job-queue-postgresql.md)) |
 
-Próximos tópicos: fila da geração por IA, CI/CD com análise de segurança, logs e monitoramento, e AWS com custo baixo ([trilha](docs/TRILHA-ARQUITETURA.md)).
+Próximos tópicos: CI/CD com análise de segurança, logs e monitoramento, e AWS com custo baixo ([trilha](docs/TRILHA-ARQUITETURA.md)).
 
 ## Como o projeto é feito
 Um tópico de arquitetura por vez: conceito, boa prática com fonte oficial conferida na data, duas ou três opções com custo e uma decisão registrada em ADR. O desenvolvimento usa o Claude Code como apoio, com revisão humana de cada decisão.

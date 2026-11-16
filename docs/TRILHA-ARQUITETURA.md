@@ -11,7 +11,7 @@ Começou em 13/11/2026, antes do Spec Kit. É um tópico por vez: explicação, 
 | 5 | Docker e ambiente isolado para o Claude: container no WSL2 (preferido), sandbox como alternativa, sessão na nuvem; container da aplicação sem root e só com o necessário | decidido | [0007](decisoes/0007-docker-and-isolated-environment.md) |
 | 6 | CI/CD: testes, análise de segurança (SAST, dependências e busca de segredos commitados) e branch protegida; mapa de ameaças de uma página (STRIDE); 2FA só para o administrador na v1; varredura com OWASP ZAP (DAST) contra o container | pendente | — |
 | 7 | AWS com custo baixo (se faltar tempo, a demonstração local basta) | pendente | — |
-| 8 | Performance e escala | pendente | — |
+| 8 | Performance e escala: fila da geração por IA no próprio PostgreSQL (pg-boss, `SKIP LOCKED`), repetições em camadas, clique duplo, concorrência do worker e Redis só quando houver motivo medido | decidido | [0008](decisoes/0008-ai-job-queue-postgresql.md) |
 | 9 | Logs e monitoramento; plano de incidente (trocar segredos, encerrar sessões, avisar a ANPD e os titulares, LGPD art. 48, prazo a conferir) | pendente | — |
 
 ## Ordem de execução (15/11)
