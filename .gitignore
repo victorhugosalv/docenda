@@ -1,0 +1,11 @@
+# Segredos: nunca no git
+.env
+.env.*
+!.env.example
+
+# Dependências e build
+node_modules/
+dist/
+
+# Metadado do Windows em arquivos baixados (WSL)
+*:Zone.Identifier
