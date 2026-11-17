@@ -1,14 +1,14 @@
-# Segredos: nunca no git
+# Secrets: never in git
 .env
 .env.*
 !.env.example
 
-# Dependências e build
+# Dependencies and build output
 node_modules/
 dist/
 
-# Metadado do Windows em arquivos baixados (WSL)
+# Windows metadata on downloaded files (WSL)
 *:Zone.Identifier
 
-# Conjunto de avaliação com dados reais: nunca no git (docs/AVALIACAO.md)
+# Evaluation set with real data: never in git (docs/EVALUATION.md)
 evals/private/
