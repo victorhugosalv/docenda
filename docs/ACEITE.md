@@ -28,6 +28,7 @@ No `/speckit-specify` da fatia, cite a seção daqui em vez de reescrever os cri
 | 12 | A imagem roda sem root, com sistema de arquivos só de leitura | 0007 D2 | Rev |
 | 13 | `apps/web` compila e a API serve a página inicial sem violar a CSP | 0002, 0006 | I |
 | 14 | Spec Kit fixado na versão da 0014, com a constituição escrita; a seção "Commands" do `CLAUDE.md` preenchida | 0014 | Rev |
+| 15 | O CI reprova um PR com título de commit que tenha acento do português (regra de língua, 0001, nota de 17/11) | 0001 | CI |
 
 Fora da fatia: tabelas de produto, login e qualquer tela além da página inicial.
 

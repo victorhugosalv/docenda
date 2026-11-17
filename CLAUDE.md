@@ -38,7 +38,14 @@ Read the documents a slice cites before writing code. If a slice changes a requi
 - **Tests first.** Unit tests (`*.test.ts`) beside the code, integration tests (`*.int.test.ts`) against PostgreSQL, end-to-end tests in `e2e/`. A test for a requirement or an invariant starts its name with the ID (`RF-41`, `INV-03`).
 - **One slice, one branch, one pull request.** `main` is protected. Small commits, in English, imperative mood.
 - **Stable versions only**, pinned as the ADRs say. Before adding a dependency, check that it is maintained and say why it is needed in the pull request.
-- **Language:** code, commits, API docs and ADRs in English. Screen text and product documents in Portuguese. Use the names in the glossary of `docs/DOMINIO.md`; add a new name there before using it.
+- **Language: decided by who reads it** (owner's decision of 17/11/2026; ADR 0001, note of 17/11):
+
+  | Reader | Language | What |
+  |---|---|---|
+  | Developers and the coding agent | **English** | Everything in this repository that is not shown to end users: code, comments, commits, pull requests, ADRs, README, every document in `docs/`, Spec Kit specs and the instructions of the prompts |
+  | Teachers, on screen | **Brazilian Portuguese** | Screen text, error messages, AI output (the plan), the exported file, the BNCC catalog and the content of evaluation cases |
+
+  A commit title with Portuguese accents is a mistake: rewrite it in English. Use the names in the glossary of `docs/DOMINIO.md`; add a new name there before using it.
 - **Explain as you go.** The owner is learning this stack: say in a few lines why a choice was made.
 - **Stop and ask** before deleting data, changing a protected document, adding a paid service or weakening a rule above.
 
