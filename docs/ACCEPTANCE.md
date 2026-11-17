@@ -219,6 +219,7 @@ The look follows [DESIGN](DESIGN.md).
 - One access record per successful login; the retention job deletes what is older than 6 months, with its own role (0010 D5, D6; `I`).
 - The three e-mail alerts go out once each: 80% of the cap, circuit breaker open and a job in the failure queue (0010 D7; `I`).
 - Changing a setting is recorded in the audit and applies on the next request (RF-75; `I`).
+- The precautionary reset ends every session of the person, refuses the old password, sends the e-mail to set a new one and is recorded in the audit (INCIDENTS, step 1; `I`).
 
 ### F13 `sources`
 - The link check refuses private, local and metadata addresses, also after a redirect and when the name resolves to an internal address (RNF-43; `I`).
@@ -228,8 +229,9 @@ The look follows [DESIGN](DESIGN.md).
 - ABNT reference with "Acesso em" (RF-54; `U`).
 
 ### F14 `account-lifecycle`
-- The three deletion steps; a wrong account name deletes nothing (RF-07, scenario F8.2; `E2E`).
-- Logging in within the 30 days cancels the deletion (RF-07; `I`).
+- The two request steps; a wrong account name deletes nothing; a right one deactivates the account and ends its sessions (RF-07, RNF-07, scenario F8.2; `E2E`).
+- Opening an e-mail link with `GET` changes nothing; "delete now" with a wrong password deletes nothing; each link works once (RF-07, scenario F8.3; `I`).
+- Logging in within the 30 days cancels the deletion, with a notice on screen and by e-mail (RF-07; `I`).
 - Once the period is over, no author table keeps a row of theirs, the usage records lose the link to the person and there is a receipt with no identification (section 7.1; scenario F8.1; `I`).
 - An account idle for 6 months gets the warning and enters the same flow (section 7.1; `I`).
 

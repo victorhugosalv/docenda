@@ -332,7 +332,7 @@ It is a `POST` because exporting creates an event (`plan_export`). The server bu
 | `GET /me/ai-credit` | F11 | `{ period, monthlyCreditNano, availableNano, generationsLeftToday, aiEnabled }` |
 | `POST /invites/:token/accept` | F10 | Creates the account with the invited e-mail, the password and the acceptance of the terms |
 | `PATCH /me`; e-mail and password change through the Better Auth routes | F10 | RF-05, RF-06 |
-| `POST /me/deletion`, `POST /me/deletion/confirm` | F14 | The three steps of RF-07 |
+| `POST /me/deletion` (password and account name); `POST /account-deletion/cancel` and `POST /account-deletion/confirm` (e-mail token; confirm also takes the password) | F14 | RF-07. The e-mail links open a page; only its button calls these routes, so an e-mail scanner opening the link changes nothing |
 | `GET, POST /plans/:id/sources`; `PATCH, DELETE /plans/:id/sources/:sid` | F13 | Source brought by the author |
 | `POST /plans/:id/evaluations` | F15 | AI evaluation; returns a `Generation` with `operation: 'evaluate_plan'` |
 | `POST /me/ai-block/review-request` | F09 | Request to review the block (RF-94) |

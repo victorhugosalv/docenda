@@ -47,7 +47,7 @@
 | RF-04 | The system must keep the session (see RNF-07) and end it after 30 min without use; the user can log out | After 30 min idle, the next action asks for login; on logout, the session is deleted on the server | Yes | Must | v1 | I |
 | RF-05 | The user must be able to recover the password by automatic e-mail, with a single-use link that expires in 1 h | A used or expired link does not work; the message does not reveal whether the e-mail exists; changing the password ends the other sessions | Yes | Must | v1 | I, E2E |
 | RF-06 | The user must be able to see and correct their name and e-mail | Changing the e-mail requires confirmation at the new address; the change is recorded in the log | Yes | Must | v1 | E2E |
-| RF-07 | The user must be able to delete the account and the data (see section 7.1) | Confirmation in 3 steps: password, typing the account name and clicking the link sent by e-mail. The account stays deactivated for 30 days; logging in within that period cancels the deletion; afterwards, the data follows section 7.1 | Yes | Must | v1 | I, E2E |
+| RF-07 | The user must be able to delete the account and the data (see section 7.1) | Request in 2 steps: password and typing the account name. The account is deactivated at once and its sessions end; an e-mail goes out with two links, "cancel the deletion" and "delete now". A link only opens a page, and the page's button acts; "delete now" also asks for the password, without opening a session. Logging in within 30 days cancels the deletion, with a notice on screen and by e-mail. After the 30 days, or right after "delete now", the data follows section 7.1 | Yes | Must | v1 | I, E2E |
 | RF-08 | The user should be able to download all their data in one file (portability) | JSON file with account, contexts and plans | Yes | Should | later | I |
 | RF-09 | The user should be able to turn on two-factor authentication (authenticator app code) | With 2FA on, login asks for the code; recovery codes generated once | Yes | Should | later | I, E2E |
 | RF-10 | The user should be able to log in with Google and other providers, and link those logins to the same account | The same account, whether by password or by provider; linking only with a confirmed e-mail | Yes | Should | later | I, E2E |
@@ -176,7 +176,7 @@ The automatic check is sometimes wrong (false positive). That is why there is ad
 | RNF-04 | Generation should show progress and finish within 60 s | Measured on real calls |
 | RNF-05 | An AI failure cannot lose the author's work | Draft saved before each call |
 | RNF-06 | Application security follows OWASP ASVS 5.0 as a checklist | Level 1 items checked before publishing; HTTPS everywhere; password only as a strong hash; secrets outside the code |
-| RNF-07 | Session stored on the server, identified by a protected cookie (HttpOnly, SameSite; Secure on HTTPS); a new identifier on every login; revocable (logout, password change, log out of all devices, suspension, deletion) | Test: a revoked session is refused on the next request. Decision 0003 |
+| RNF-07 | Session stored on the server, identified by a protected cookie (HttpOnly, SameSite; Secure on HTTPS); a new identifier on every login; revocable (logout, password change, log out of all devices, deletion request, precautionary reset after an incident). Misuse never ends a session: it only blocks the AI (RF-91) | Test: a revoked session is refused on the next request. Decision 0003, note of 17/11 |
 | RNF-08 | AI security follows the OWASP Top 10 for LLM applications (2025) | User text, pasted material and source pages are treated as **data**, never as instructions (indirect injection); consumption limits (RF-71 to RF-73) |
 | RNF-09 | Quality: TDD across the whole system, with unit, integration and e2e tests running on every change (CI) | Every rule in section 4 has a unit test with edge cases; every v1 BDD scenario has an e2e test |
 | RNF-10 | AI quality: evals with a rubric and a set of examples | No invented skill or source in the evaluation set |
@@ -261,8 +261,9 @@ As an administrator, I want to limit and protect AI use, so spending and abuse d
 
 **F8. Delete the account**
 As a user, I want to delete my account and my data, to exercise my right under the LGPD.
-- *Scenario 1:* Given I confirmed my password, typed the account name and clicked the e-mail link, when the deletion finishes, then I can no longer log in and my plans no longer exist.
+- *Scenario 1:* Given I confirmed my password and typed the account name, when the 30 days are over or I confirm "delete now" with my password, then I can no longer log in and my plans no longer exist.
 - *Scenario 2:* Given I typed the account name wrong, when I confirm, then nothing is deleted.
+- *Scenario 3:* Given I asked for the deletion, when the e-mail link is opened (by me or by an e-mail scanner), then nothing changes until I press the button on the page.
 
 ## 7. Privacy (LGPD checklist, Privacy by Design)
 **Data inventory (v1):**
@@ -299,12 +300,12 @@ Basis: LGPD, arts. 15, 16 and 18, VI (elimination, except for the exceptions in 
 | Minimal record of the deletion request (date and result, no name or e-mail) | **Kept** | To prove the request was fulfilled |
 | Backups | Expire within the period of RNF-24 | The data disappears when the backup expires |
 
-**Cooling-off period:** deletion is not immediate. The account stays deactivated for 30 days (the same period as X and Instagram); logging in during that period cancels the request. Afterwards, the table above applies.
+**Cooling-off period:** deletion is not immediate. The account stays deactivated for 30 days (the same period as X and Instagram); logging in during that period cancels the request, with a notice on screen and by e-mail. The e-mail sent with the request lets the person cancel it or bring the deletion forward (RF-07). Afterwards, the table above applies.
 
 **Inactive accounts:** after 6 months without use, the system warns by e-mail and the account enters the same flow: 30 days deactivated and then deleted or anonymized according to the table. Deactivating (soft delete) only hides the data; for the LGPD, what counts is deleting or anonymizing at the end of the period.
 
 **About the confirmations:** the law asks that consent be revoked by a "procedimento gratuito e facilitado" (art. 8º, §5º) and that rights be fulfilled at no cost (art. 18, §5º). Therefore:
-- **Deleting the account:** the 3 steps (password, account name and e-mail link) are there for **security**, against deletion by mistake or by someone who broke into the account. They cannot become an obstacle meant to discourage the user: the button is easy to find and the process is short.
+- **Deleting the account:** the 2 steps (password and account name) are there for **security**, against deletion by mistake or by someone who broke into the account; the 30 days and the e-mail let the owner undo a request they did not make. Bringing the deletion forward asks for the password again, because it cannot be undone. None of this may become an obstacle meant to discourage the user: the button is easy to find and the process is short.
 - **Withdrawing the improvement consent (RF-86):** one click, with no extra confirmation.
 
 ### 7.2 Checklist items

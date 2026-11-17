@@ -130,7 +130,8 @@ Every failure has a reason from a closed list, and the screen shows its own mess
 
 ### 4.5 Invite and account
 - Invite: `pending` → `accepted`, `cancelled` or `expired` (7 days).
-- Account: `active` → `deactivated` (30 days, cancelled by logging in) → deleted or anonymized (REQUIREMENTS, section 7.1). The AI block for misuse is a separate flag: it does not deactivate the account.
+- Account: `active` → `deactivated` (30 days; logging in or the e-mail's cancel link reactivates it) → deleted or anonymized (REQUIREMENTS, section 7.1). "Delete now" in the e-mail, with the password, skips the rest of the 30 days.
+- Misuse never changes this state: the AI block is a separate flag (`MisuseBlock`). There is no account suspension: after an incident, the account stays `active`, its sessions end and the password must be reset by e-mail (precautionary reset, [INCIDENTS](INCIDENTS.md), step 1).
 
 ## 5. Findings: one format for rules and evaluation
 
