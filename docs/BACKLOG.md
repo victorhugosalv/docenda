@@ -28,9 +28,9 @@
 | F09 | `guardrails` | `input_check` and `output_check`; privacy alert on screen; misuse occurrences; explained refusal | AI, back, front | RF-15, RF-90, RF-91, RF-92, RF-95, RNF-08 | M2 | to do |
 | F10 | `invites-email` | Invitation by e-mail, sign-up by invitation only, versioned terms, password recovery, e-mail change | back, front | RF-01, RF-02, RF-05, RF-06, RF-78 | M2 | to do |
 | F11 | `ai-credit` | Monthly per-person credit on top of the F07 ledger, limits per day and per minute, balance on screen | back, front | RF-71, RNF-42 | M2 | to do |
-| F12 | `admin` | Panel: invitations, usage and cost, occurrences and block review, settings; audit, access records and the three e-mail alerts | back, front | RF-93, RF-94, RNF-39; decision 0010 | M2 | to do |
+| F12 | `admin` | Panel: invitations, usage and cost, occurrences and block review, settings; audit, access records and the three e-mail alerts; the precautionary reset command (INCIDENTS, step 1) | back, front | RF-93, RF-94, RNF-39; decision 0010 | M2 | to do |
 | F13 | `sources` | Source brought by the author: domain list, safe link check, "to review" state, ABNT reference | back, front | RF-51, RF-52, RF-53, RF-54, RNF-43 | M2 | to do |
-| F14 | `account-lifecycle` | Deletion in 3 steps with a 30-day period, inactive accounts, retention and cleanup jobs | back, front | RF-07; section 7.1 | M2 | to do |
+| F14 | `account-lifecycle` | Deletion request in 2 steps with a 30-day period, cancel and delete-now links by e-mail, inactive accounts, retention and cleanup jobs | back, front | RF-07; section 7.1 | M2 | to do |
 | F15 | `evaluate-plan` | Plan evaluation: rules and rubric, with findings and suggestions | AI, back, front | RF-26 | M2 | to do |
 | F16 | `quality-gate` | Accessibility review with a screen reader, e2e scenarios F1 to F8, full evaluation, README with a demo | all | RNF-01, RNF-03, RNF-09, RNF-10 | M2 | to do |
 

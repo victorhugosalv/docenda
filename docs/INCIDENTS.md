@@ -10,13 +10,15 @@ What already limits the damage: Docenda stores no identifiable student data (sec
 
 | # | Step | What to do | When |
 |---|---|---|---|
-| 1 | **Contain** | Turn off the AI (cap at zero) and suspend the accounts involved; take the application offline if the attack continues | Immediately |
+| 1 | **Contain** | Turn off the AI (cap at zero) and apply the **precautionary reset** to the accounts involved: end their sessions, invalidate the password and e-mail each person why, with a link to set a new one (one command, F12). Take the application offline if the attack continues | Immediately |
 | 2 | **Rotate the secrets** | `BETTER_AUTH_SECRET` (invalidates every cookie), database password, Anthropic key and e-mail credentials; a secret that went into a commit is rotated, not just removed from history | Immediately |
 | 3 | **End the sessions** | Delete every session in the database; everyone logs in again | Immediately |
 | 4 | **Assess the risk** | Which data, of how many people, since when. Can the incident affect the data subjects' rights, and does it involve any criterion of art. 5º (authentication credentials, sensitive data, large scale, children's data, confidentiality)? | Within 1 business day |
 | 5 | **Notify** | If there is relevant risk or harm: the ANPD (form on its website) and each data subject by e-mail, in plain language, with the minimum content of art. 9º (below) | **Within 3 business days** of learning that personal data was affected |
 | 6 | **Record** | Every incident, notified or not, in the private register: date, what happened, data affected, risk assessment, measures and notifications | Always; kept for **5 years** |
 | 7 | **Learn** | Turn it into a test, an alert or an ADR, so it does not happen again | After it is closed |
+
+**Known limit (v1):** if the person's own e-mail was broken into, the reset link reaches the attacker. That case is out of scope in v1 and is handled by hand, by contacting the person another way.
 
 ## What the notice to data subjects must contain (art. 9º)
 - What happened and which data was affected.
