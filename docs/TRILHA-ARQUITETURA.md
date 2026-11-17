@@ -14,6 +14,19 @@ Começou em 13/11/2026, antes do Spec Kit. É um tópico por vez: explicação, 
 | 8 | Performance e escala: fila da geração por IA no próprio PostgreSQL (pg-boss, `SKIP LOCKED`), repetições em camadas, clique duplo, concorrência do worker e Redis só quando houver motivo medido | decidido | [0008](decisoes/0008-ai-job-queue-postgresql.md) |
 | 9 | Logs e monitoramento; plano de incidente (trocar segredos, encerrar sessões, avisar a ANPD e os titulares, LGPD art. 48, prazo a conferir) | decidido | [0010](decisoes/0010-logs-monitoring-and-incident-response.md); plano em [INCIDENTES](INCIDENTES.md) (3 dias úteis, Resolução CD/ANPD 15/2024) |
 
+## Revisão do planejamento (16/11)
+Com a trilha concluída, uma revisão independente de requisitos e decisões apontou o que faltava antes do código. Ela gerou três decisões e notas datadas nas 0001, 0002, 0005, 0006 e 0008.
+
+| # | Tópico | Decisão |
+|---|---|---|
+| 10 | Molde de módulo, transação entre módulos, repositórios sem banco falso, papéis do banco, formato de erro | [0012](decisoes/0012-transactions-repositories-and-module-layout.md) |
+| 11 | Front-end: rotas, dados do servidor, formulários, acessibilidade | [0013](decisoes/0013-front-end-stack.md) |
+| 12 | Método de desenvolvimento por especificação (Spec Kit) | [0014](decisoes/0014-spec-driven-workflow-spec-kit.md) |
+
+Da mesma revisão saíram o [DOMINIO](DOMINIO.md), o [IA](IA.md), o [BACKLOG](BACKLOG.md), o [ROADMAP](ROADMAP.md), a [INTERFACE](INTERFACE.md) e o REQUISITOS v0.3.
+
+Em 17/11, cinco pacotes detalharam o que o código precisa para começar sem decidir no escuro: [DADOS](DADOS.md) (tabelas e papéis), [CONTRATOS](CONTRATOS.md) (API), [ACEITE](ACEITE.md) (critérios por fatia), [AVALIACAO](AVALIACAO.md) com os rascunhos dos prompts e os conjuntos de teste, [DESIGN](DESIGN.md) e o [mapa de ameaças](AMEACAS.md), adiantado do marco M3.
+
 ## Ordem de execução (15/11)
 A numeração acima continua sendo o total da trilha. A ordem de trabalho, enxuta para a primeira versão, é **5 → 8 → 6 → 9 → 7**:
 1. **5. Docker:** `docker compose` com PostgreSQL e Mailpit, para o sistema subir com um comando; container sem root. Ambiente isolado para o Claude junto.

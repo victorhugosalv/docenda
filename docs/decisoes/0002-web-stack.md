@@ -1,6 +1,6 @@
 # 0002: Web stack
 
-- **Date and status:** 14/11/2026, approved by Victor. The database is still open.
+- **Date and status:** 14/11/2026, approved by Victor. The database was decided in [0004](0004-postgresql.md), and the front-end libraries in [0013](0013-front-end-stack.md).
 - **Context:** Node.js with TypeScript was already decided. Everything in Docenda is behind login, so SEO and server-side rendering bring little value. AI generation is slow and runs in a queue (RNF-34), which requires a long-running server and a worker. The API must stay independent from the UI (RNF-30). Rule from 0001: stable versions only.
 - **Decision:**
   - **Back-end: Express 5** (5.3.0 on 14/11/2026). Express 5 forwards errors from `async` handlers to the error middleware by itself ([migration guide](https://expressjs.com/en/guide/migrating-5.html)).
@@ -18,4 +18,4 @@
   - Pros: the most known framework and plenty of material; the hexagonal design keeps the framework at the edge, so changing it later only touches `http/` and `entrypoints/`.
   - Cons: Express ships almost nothing, so we pick and wire validation, logging and security headers ourselves. Candidates checked on 14/11/2026 are Zod 4, pino-http 11 and helmet 8; they get confirmed in topic 3 (security) and topic 9 (logs). Module boundaries rely only on dependency-cruiser.
   - Cost: no money.
-- **Still open:** the database (PostgreSQL is the natural candidate for Prisma). It is decided in topic 5 (Docker) or topic 7 (AWS).
+- **Closed:** the database is PostgreSQL 18 ([0004](0004-postgresql.md)).

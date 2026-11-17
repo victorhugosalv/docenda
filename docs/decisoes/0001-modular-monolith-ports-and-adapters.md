@@ -19,3 +19,6 @@
   - Pros: rules testable with fakes (TDD), switching vendor means switching an adapter, and modules can be extracted later.
   - Cons: more files and discipline at the start; the boundary depends on a tool, not on the language.
   - Cost: no money, a few extra hours of setup.
+- **Update (16/11/2026, planning review):**
+  - Item 2: the database keeps its interfaces but gets no fake adapter; repositories are tested against the real PostgreSQL. The inside of a module and the new `src/shared/` folder are defined in [0012](0012-transactions-repositories-and-module-layout.md).
+  - Item 6: the README and the product documents (purpose, requirements, domain, backlog) are in Portuguese, the language of the people the product is for. Code, commits, API docs and ADRs stay in English.

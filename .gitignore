@@ -9,3 +9,6 @@ dist/
 
 # Metadado do Windows em arquivos baixados (WSL)
 *:Zone.Identifier
+
+# Conjunto de avaliação com dados reais: nunca no git (docs/AVALIACAO.md)
+evals/private/
