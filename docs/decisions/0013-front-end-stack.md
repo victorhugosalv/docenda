@@ -1,0 +1,31 @@
+# 0013: Front-end stack
+
+- **Date and status:** 16/11/2026. Written in the planning review, decided by Claude at Victor's request; Victor reviews it in the pull request.
+- **Context:** 0002 chose React with TypeScript and Vite, as a single-page application served by the API container. Nothing else about the front end was decided. The requirements that shape it: it works on a 360 px screen (RNF-02); a blind person can use everything alone with a screen reader, WCAG 2.2 AA (RNF-03); generation shows progress (RNF-04) by asking for the status every 2 s (0008 D3); a failure never loses the author's work (RNF-05); the session ends after 30 min idle (RF-04). The content security policy is `default-src 'self'` (0006). Versions checked in the npm registry on 16/11/2026.
+- **Decision:**
+  - **D1. Routing: React Router 8** (8.5.1), used only as a client-side router. No server rendering and no framework mode: 0002 already ruled them out.
+  - **D2. Server data: TanStack Query 5** (5.107.1). It caches what comes from the API, retries, and re-asks on an interval, which is exactly the generation status (0008 D3): the interval runs while the generation is active and stops when it ends. There is no global state library; what is not server data is local component state or the URL.
+  - **D3. Forms: React Hook Form 7** (7.92.0) with the Zod resolver, validating with the same schemas the API uses (`packages/contracts`, 0006 D5).
+  - **D4. Components and accessibility:**
+    - native HTML elements first (`button`, `label`, `fieldset`, `dialog`);
+    - **React Aria Components** (1.22.1, Apache 2.0) only for what HTML does not give: the skill picker (combobox), menus and tabs. It ships without styles and handles keyboard, focus and screen reader behaviour;
+    - every form error is tied to its field and announced; focus moves to the first error; the generation progress is a live region.
+  - **D5. Styles: CSS Modules** with design tokens as CSS custom properties (color, space, type). No CSS-in-JS: it needs inline styles, which the content security policy forbids.
+  - **D6. Text:** every screen string comes from one module, in Portuguese. It keeps the wording consistent now and leaves room for other languages later.
+  - **D7. When the session ends mid-edit** (RF-04, RNF-05): the editor saves the draft to the server as the author types (with a short delay). A `401` opens a sign-in dialog over the current screen and, after sign-in, repeats the failed request. What was typed is not lost. Nothing from the plan is kept in browser storage, because a shared school computer is a real case.
+  - **D8. Accessibility checks:** `@axe-core/playwright` (4.14.0) runs in every e2e screen test and fails on any violation. Automated checks find only part of the problems, so each screen also gets one manual pass with keyboard and a screen reader before v1 closes (BACKLOG, F16).
+  - **D9. Screens:** the map is in [INTERFACE](../INTERFACE.md). The plan editor shows each AI suggestion in place, with accept, edit and reject, and the findings beside the fields they refer to.
+- **Alternatives considered:**
+  - TanStack Router: typed routes, but one more new tool, and the app has few routes.
+  - SWR instead of TanStack Query: smaller, but with less control over polling and mutations.
+  - Tailwind CSS: fast to write, but Victor already uses CSS Modules, and tokens plus modules cover a small app.
+  - Radix UI or shadcn/ui: good primitives and a ready look; React Aria Components covers more screen reader cases, which is the hard requirement here.
+  - Material UI or another full component library: fast start, but a heavy bundle and a look that is hard to change.
+  - Redux or Zustand: no client state that needs them.
+- **Consequences:**
+  - Pros: three small libraries, each with one job; the polling of 0008 needs no code of its own; accessibility is checked on every PR; no style or script needs a policy exception.
+  - Cons: without a ready component library, the look is our own work; the autosave adds requests and an endpoint; React Aria Components has its own way of composing that takes some learning.
+  - Changes elsewhere: none. 0002 and 0006 already pointed here.
+  - Cost: none.
+- **Update (17/11/2026, planning packages).** Colors, type, components and screens are in [DESIGN](../DESIGN.md). Two points that bind the code: fonts are served from `apps/web/public/fonts/` (loading them from Google Fonts would break `default-src 'self'` and send the user's IP abroad), and the interface uses Atkinson Hyperlegible Next, a typeface designed for low vision; the handwriting fonts of the project cover stay out of the screens.
+- **Sources (checked on 16/11/2026):** npm registry (`react` 19.3.1, `react-router` 8.5.1, `@tanstack/react-query` 5.107.1, `react-hook-form` 7.92.0, `@hookform/resolvers` 7.0.6, `react-aria-components` 1.22.1, `@axe-core/playwright` 4.14.0, `vite` 8.3.8), [WCAG 2.2](https://www.w3.org/TR/WCAG22/), [ARIA Authoring Practices Guide](https://www.w3.org/WAI/ARIA/apg/), [React Aria Components](https://react-spectrum.adobe.com/react-aria/components.html), [TanStack Query](https://tanstack.com/query/latest).
