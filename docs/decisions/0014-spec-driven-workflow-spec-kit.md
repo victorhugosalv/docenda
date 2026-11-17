@@ -10,8 +10,8 @@
 
     | Document | Role in the workflow |
     |---|---|
-    | [PROPOSITO](../PROPOSITO.md), the ADRs and the invariants in [DOMINIO](../DOMINIO.md) | Evidence for the constitution. It states only rules that are already true or decided |
-    | [REQUISITOS](../REQUISITOS.md) | The product catalog. It stays the single place where a requirement is written |
+    | [PURPOSE](../PURPOSE.md), the ADRs and the invariants in [DOMAIN](../DOMAIN.md) | Evidence for the constitution. It states only rules that are already true or decided |
+    | [REQUIREMENTS](../REQUIREMENTS.md) | The product catalog. It stays the single place where a requirement is written |
     | [BACKLOG](../BACKLOG.md) | The order of features. Each slice is one Spec Kit feature |
     | `specs/NNN-<slice>/` | The specification, plan and tasks of that slice. It cites requirements by ID and never copies their text |
     | ADRs | Input to the plan step. A plan follows them; a new decision is a new ADR, not a line in a plan |
@@ -23,7 +23,7 @@
     - generated files that only repeat an existing document are trimmed before the merge.
   - **D5. To confirm when installing:** the exact way commands are called in Claude Code (the project page shows the hyphen form, such as `/speckit-specify`), and which files the `claude` integration adds.
 - **Alternatives considered:**
-  - OpenSpec 2.0.0: its model fits the requirements document well, since a living specification per domain plus deltas is what the "changes in REQUISITOS" notes in the ADRs do by hand. Against it: 2.0.0 was 5 days old and had just renamed every command; adopting it would mean moving REQUISITOS into a second format; and Victor already knows Spec Kit. Revisit if keeping REQUISITOS in step with the code starts to hurt.
+  - OpenSpec 2.0.0: its model fits the requirements document well, since a living specification per domain plus deltas is what the "changes in REQUIREMENTS" notes in the ADRs do by hand. Against it: 2.0.0 was 5 days old and had just renamed every command; adopting it would mean moving REQUIREMENTS into a second format; and Victor already knows Spec Kit. Revisit if keeping REQUIREMENTS in step with the code starts to hurt.
   - Staying manual: nothing to install, but each slice would need its own hand-written specification and task format.
   - Spec Kit 1.4.1: released on the day of this decision; it adds catalog entries and workflow options that are not needed here.
 - **Consequences:**

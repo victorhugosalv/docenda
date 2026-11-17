@@ -37,7 +37,7 @@
     | Role | Used by | Can |
     |---|---|---|
     | `docenda_owner` | The migration step only | Create and change tables; owns the `pgboss` schema setup |
-    | `docenda_app` | API and worker | Read and write data; on `audit_event`, `access_record`, `lesson_plan_version` and `credit_entry`, insert and read only; on the skill catalog, read only (table by table in [DADOS](../DADOS.md), section 5) |
+    | `docenda_app` | API and worker | Read and write data; on `audit_event`, `access_record`, `lesson_plan_version` and `credit_entry`, insert and read only; on the skill catalog, read only (table by table in [DATA](../DATA.md), section 5) |
     | `docenda_retention` | The retention jobs | Delete expired rows from `audit_event` and `access_record` |
 
     A one-shot `migrate` service in Compose runs `prisma migrate deploy` as `docenda_owner`. The API and the worker start only after it finishes successfully. The application never runs migrations and cannot change the schema.
@@ -66,6 +66,6 @@
 - **Consequences:**
   - Pros: every slice starts from the same layout; the three-way transaction of 0008 has a place to live; tests exercise the real database behaviour; the application cannot alter its own schema or its audit trail.
   - Cons: unit tests cover `domain/` only, so use cases need the database to be tested; the handle adds a parameter to repository methods; three roles mean grants to keep in the migrations.
-  - Changes elsewhere: 0001 (item 2 and the layout), RNF-30, RNF-40 and RNF-42 in REQUISITOS, and 0008 (note of 16/11).
+  - Changes elsewhere: 0001 (item 2 and the layout), RNF-30, RNF-40 and RNF-42 in REQUIREMENTS, and 0008 (note of 16/11).
   - Cost: none.
 - **Sources:** [RFC 9457: Problem Details for HTTP APIs](https://www.rfc-editor.org/rfc/rfc9457), [PostgreSQL 18: GRANT](https://www.postgresql.org/docs/18/sql-grant.html), [Prisma: transactions](https://www.prisma.io/docs/orm/prisma-client/queries/transactions), [pg-boss adapters (Prisma)](https://pgboss.io/api/adapters) (checked for 0008 on 16/11/2026).

@@ -1,6 +1,6 @@
 # Evaluation datasets
 
-Inputs for the AI evaluation described in `docs/AVALIACAO.md`. One JSON object per line (JSONL). **Everything here is fictional:** names, classes and situations were made up for testing.
+Inputs for the AI evaluation described in `docs/EVALUATION.md`. One JSON object per line (JSONL). **Everything here is fictional:** names, classes and situations were made up for testing.
 
 | File | Lines | Used for |
 |---|---|---|
@@ -12,8 +12,8 @@ Inputs for the AI evaluation described in `docs/AVALIACAO.md`. One JSON object p
 
 ## Line formats
 
-- `synthetic.jsonl`: `id`, `tags`, `context` (the `ContextFields` of `docs/CONTRATOS.md`), `plan` (`theme`, `subtheme`, `effectiveMinutes`, `lesson`, `sourceMaterial`) and `expect` (`outcome`, plus optional `setupHeavy`, `mostlyFromMaterial`, `noUnverifiableFacts`, `language`).
-- `guardrails/privacy.jsonl`: `id`, `lang`, `block` (`aula`, `turma` or `material`), `text`, `expect.studentData`, `expect.wordList` and an optional `note`.
+- `synthetic.jsonl`: `id`, `tags`, `context` (the `ContextFields` of `docs/CONTRACTS.md`), `plan` (`theme`, `subtheme`, `effectiveMinutes`, `lesson`, `sourceMaterial`) and `expect` (`outcome`, plus optional `setupHeavy`, `mostlyFromMaterial`, `noUnverifiableFacts`, `language`).
+- `guardrails/privacy.jsonl`: `id`, `lang`, `block` (`lesson`, `class` or `material`, the prompt tag the text goes in), `text`, `expect.studentData`, `expect.wordList` and an optional `note`.
 - `guardrails/sensitive-themes.jsonl`: `id`, `theme`, `teacherNotes`, `expect`.
 - `guardrails/injection.jsonl`: `id`, `block`, `text`, `note`, `expect.behaviourChanged`.
 - `guardrails/misuse.jsonl`: `id`, `block`, `text`, `expect.misuse`, `expect.category`.

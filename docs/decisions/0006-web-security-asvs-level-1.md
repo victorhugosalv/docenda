@@ -39,7 +39,7 @@
 - **Consequences:**
   - Pros: almost everything is configuration; brute force protection without our own code; nothing stored about e-mails that are not accounts.
   - Cons: if the database and the secret leak together, active sessions can be used until they expire or the secret is replaced; a distributed attack (many IPs) is only slowed by Argon2id and the blocklist until the per-account limit arrives.
-  - Changes in REQUISITOS: RF-03, F1 scenario 2, REQ-15 and REQ-22.
+  - Changes in REQUIREMENTS: RF-03, F1 scenario 2, REQ-15 and REQ-22.
 - **Update (16/11/2026, planning review).** Three controls that D5 did not cover:
   - **Server-side request forgery (SSRF).** Checking that a source link responds (RF-52, RF-53) makes the server open an address chosen by someone else. Without limits, that address can be an internal one, such as the cloud metadata service that hands out credentials. The link check therefore:
     - accepts only `https` and the default port;

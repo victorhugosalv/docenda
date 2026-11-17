@@ -1,7 +1,7 @@
 # 0005: AI provider, models, LLM security and token budget
 
 - **Date and status:** 15/11/2026, approved by Victor. Models, effort levels and limits are confirmed by the test below; until then they are starting values in configuration.
-- **Context:** Docenda uses AI to generate and evaluate lesson plans (RF-20, RF-21, RF-26), suggest BNCC skills (RF-42) and check misuse and student data (RF-15, RF-90). The requirements ask for: a provider that does not train on our data (RNF-22), a cheap model for checks and a better one for generation (RNF-38), validated JSON output (RNF-35), the OWASP Top 10 for LLM applications 2025 (RNF-08), and limits and a monthly ceiling (RF-71 to RF-75). The provider stays behind the AI port (0001, RNF-30). Proposal from 14/11 (REQUISITOS, section 8, point 3); terms, OWASP list and prices checked on 15/11/2026.
+- **Context:** Docenda uses AI to generate and evaluate lesson plans (RF-20, RF-21, RF-26), suggest BNCC skills (RF-42) and check misuse and student data (RF-15, RF-90). The requirements ask for: a provider that does not train on our data (RNF-22), a cheap model for checks and a better one for generation (RNF-38), validated JSON output (RNF-35), the OWASP Top 10 for LLM applications 2025 (RNF-08), and limits and a monthly ceiling (RF-71 to RF-75). The provider stays behind the AI port (0001, RNF-30). Proposal from 14/11 (REQUIREMENTS, section 8, point 3); terms, OWASP list and prices checked on 15/11/2026.
 - **Decision:**
   - **D1. Provider: Anthropic API**, called directly through the official SDK `@anthropic-ai/sdk` (pinned version), in the adapter `providers/ai`. What the terms say:
     - by default, inputs and outputs of the commercial API are **not used for training**. Exceptions are explicit feedback or opting in, and Docenda does neither;
@@ -32,7 +32,7 @@
     | LLM04 Data and model poisoning | No training or fine-tuning; the BNCC catalog is imported once and checked (RF-40) |
     | LLM05 Improper output handling | Zod validation; Markdown sanitized (0006); skills checked against the catalog (RF-41) and sources against the domain list (RF-50) |
     | LLM06 Excessive agency | No tools that act on the system; everything is a suggestion and only the author approves (RF-23, RF-25) |
-    | LLM07 System prompt leakage | No secret in the prompt; it is assumed it can leak. So trying to get the instructions is a **minor** misuse (REQUISITOS 4.1); trying to get keys or other users' data stays **serious** |
+    | LLM07 System prompt leakage | No secret in the prompt; it is assumed it can leak. So trying to get the instructions is a **minor** misuse (REQUIREMENTS 4.1); trying to get keys or other users' data stays **serious** |
     | LLM08 Vector and embedding weaknesses | Not in v1: the catalog is filtered by stage, with no vector search |
     | LLM09 Misinformation | Skills only from the catalog; sources from the domain list, with the link checked and reviewed by the author; evals (RNF-10) |
     | LLM10 Unbounded consumption | Limits per user, monthly ceiling, maximum input and output size, on/off switch (RF-71 to RF-75); no second charge on a double click (RNF-37); circuit breaker (RNF-36) |
@@ -62,8 +62,8 @@
 - **Consequences:**
   - Pros: no training on our data; low cost per plan; checks almost free; switching provider means switching an adapter.
   - Cons: data processed abroad and kept up to 30 days (2 years if flagged); dependence on one vendor until a second adapter exists; prices and models change, so the estimates must be measured again.
-  - Changes in REQUISITOS: section 4.1 (getting the instructions moves to minor), RF-15 and RF-90 (checks in any language, answer checked by Haiku) and section 8, points 2 and 3.
-- **Update (16/11/2026, planning review).** Details in [IA](../IA.md):
+  - Changes in REQUIREMENTS: section 4.1 (getting the instructions moves to minor), RF-15 and RF-90 (checks in any language, answer checked by Haiku) and section 8, points 2 and 3.
+- **Update (16/11/2026, planning review).** Details in [AI](../AI.md):
   - **D2:** the plan's identification (school, teacher, class) is kept apart from the plan content and never enters a call. The AI port receives a type that does not have those fields, and a test with decoy values checks it.
   - **D3:** the two input checks (student data and misuse) become one Haiku call with several labels. Skills are chosen inside the generation call, not in a separate one.
   - **D4:** the skill field of the output schema is a closed list (`enum`) with the codes of the class stage, so a code outside the catalog cannot be returned. Number ranges and text lengths are not accepted by the provider's schema and are validated with Zod.

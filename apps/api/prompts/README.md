@@ -1,6 +1,6 @@
 # Prompts
 
-Versioned prompt files for the four AI operations. The design is in `docs/IA.md` (pipeline, output schema, caching) and `docs/AVALIACAO.md` (how a prompt is accepted). The prompts are written in Portuguese because the plans are.
+Versioned prompt files for the four AI operations. The design is in `docs/AI.md` (pipeline, output schema, caching) and `docs/EVALUATION.md` (how a prompt is accepted). The instructions are in English, like the rest of the repository; each prompt tells the model to write every text field in Brazilian Portuguese, because teachers read the output. The data tags (`<lesson>`, `<class>`, `<material>`) carry English field labels and Portuguese values. A first Portuguese version of these drafts is in commit `5c60b08`; F04 compares the two.
 
 **Status: drafts.** The `v1.md` files were written in the planning phase and have never been run. Each one becomes the published `v1` only after the first evaluation run (slice F04 for `generate_plan`, F09 for the checks, F15 for `evaluate_plan`). Until then they may be edited in place.
 
@@ -42,4 +42,4 @@ What never has a placeholder: the plan identification (school, teacher, class, d
 
 ## Output
 
-Each operation has a response schema in `packages/contracts`, described in `docs/IA.md`, section 4. The prompt explains what to write in each field; the schema enforces the shape.
+Each operation has a response schema in `packages/contracts`, described in `docs/AI.md`, section 4. The prompt explains what to write in each field; the schema enforces the shape.
